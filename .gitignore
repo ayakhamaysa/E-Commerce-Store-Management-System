@@ -1,0 +1,14 @@
+# Environment / secret files
+.env
+.env.*
+*.local
+notes.txt
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+*.log
