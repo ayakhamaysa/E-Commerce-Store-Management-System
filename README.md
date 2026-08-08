@@ -1,33 +1,70 @@
-# E-Commerce Store & Management System
+# 🛍️ E-Commerce Store & Management System
 
-A responsive e-commerce store and administration system built to manage products, inventory, discounts, orders, and store content from one interface.
+A responsive e-commerce store and administration system designed to manage products, inventory, discounts, orders, and store content through an integrated customer storefront and admin dashboard.
 
-## Overview
+![E-Commerce Store Preview](Images/ecommerce-preview.png)
 
-This project provides a customer-facing online store together with an admin dashboard. It uses Supabase for authentication, database services, and storage, while the frontend is built with HTML, CSS, and JavaScript.
+---
 
-## Key Features
+## 📖 Project Overview
 
-- Responsive online storefront
+The **E-Commerce Store & Management System** is a full-stack web project that provides a responsive online shopping experience together with a complete administration dashboard.
+
+Customers can browse products, view categories and discounts, select product variants, manage their shopping cart, and place orders.
+
+Administrators can manage products, categories, inventory, discounts, orders, product images, and store content through a dedicated dashboard.
+
+The project uses **Supabase** for authentication, database services, and storage, while the frontend is developed using **HTML, CSS, and JavaScript**.
+
+---
+
+## ✨ Key Features
+
+### 🛒 Customer Store
+
+- Responsive e-commerce storefront
 - Product categories and product catalog
+- Product details and multiple images
 - Category-level discounts
-- Shopping cart and order workflow
-- Product variants such as colors and sizes
-- Inventory and stock management
-- Multiple product images
 - Best-selling products
-- Admin dashboard
-- Product and category management
-- Order management and status updates
+- Product variants such as colors and sizes
+- Shopping cart
+- Order placement workflow
+- Responsive design for desktop, tablet, and mobile devices
+
+### ⚙️ Admin Dashboard
+
+- Secure administrator authentication
+- Product management
+- Category management
+- Inventory and stock management
+- Product variant management
+- Discount management
+- Multiple product image management
+- Order management
+- Order status updates
 - Printable order details
 - WhatsApp order communication
-- Store logo and slider management
+- Store logo management
+- Homepage slider management
+
+---
+
+## 🗄️ Backend & Database
+
+The system integrates with **Supabase** to provide:
+
+- PostgreSQL database
 - Supabase Authentication
-- PostgreSQL database through Supabase
 - Supabase Storage
 - Row Level Security (RLS)
+- Product and inventory data management
+- Order storage and management
+- Image storage
 
-## Technologies
+---
+
+## 🛠️ Technologies
 
 - HTML5
 - CSS3
@@ -36,48 +73,97 @@ This project provides a customer-facing online store together with an admin dash
 - PostgreSQL
 - Supabase Authentication
 - Supabase Storage
+- Row Level Security (RLS)
 - Netlify
 
-## Project Structure
+---
+
+## 📂 Project Structure
 
 ```text
-.
+E-Commerce-Store-Management-System/
+│
+├── Images/
+│   └── ecommerce-preview.png
+│
 ├── index.html
 ├── admin.html
 ├── app.js
 ├── styles.css
 ├── config.js
-└── database-setup.sql
+├── config.example.js
+├── database-setup.sql
+├── .gitignore
+└── README.md
 ```
 
-## Setup
+---
+
+## 🚀 Setup
 
 1. Create a new Supabase project.
-2. Run `database-setup.sql` in the Supabase SQL Editor.
-3. Configure authentication and create an administrator account.
-4. Update the placeholder values in `config.js` with your own project settings.
-5. Open `index.html` locally or deploy the project to a static hosting service such as Netlify.
 
-> Important: Never commit database passwords, service-role keys, or other private credentials to the repository.
+2. Run:
 
-## Admin Dashboard
+```text
+database-setup.sql
+```
 
-The admin interface can be opened through:
+in the Supabase SQL Editor.
+
+3. Configure Supabase Authentication and create an administrator account.
+
+4. Update the placeholder configuration values in:
+
+```text
+config.js
+```
+
+with your own Supabase project settings.
+
+5. Open:
+
+```text
+index.html
+```
+
+locally or deploy the project using a static hosting service such as Netlify.
+
+> ⚠️ Never commit database passwords, service-role keys, or other private credentials to the repository.
+
+---
+
+## 🔐 Admin Dashboard
+
+The administration interface is available through:
 
 ```text
 admin.html
 ```
 
-Authentication and administrator permissions should be configured in Supabase before use.
+Administrator authentication and permissions must be configured in Supabase before using the dashboard.
 
-## Purpose
+---
 
-The project was developed as a practical full-stack e-commerce solution focused on store management, inventory control, order processing, and a responsive shopping experience.
+## 🎯 Project Purpose
 
-## Screenshots
+This project was developed as a practical e-commerce solution combining **frontend development, database integration, authentication, inventory management, and order processing**.
 
-Add screenshots of the storefront, product pages, cart, and admin dashboard here before showcasing the project publicly.
+It demonstrates the development of a complete store management workflow, from the customer shopping experience to administrative control of products, inventory, discounts, and orders.
 
-## Author
+---
 
-Computer Systems Engineering portfolio project.
+## 📸 Screenshots
+
+The image above provides a visual preview of the system across desktop, tablet, and mobile interfaces.
+
+Additional screenshots of the actual storefront and administration dashboard can be added here.
+
+---
+
+## 👩‍💻 Developer
+
+**Aya Khamaysa**
+
+Computer Systems Engineering  
+Arab American University
