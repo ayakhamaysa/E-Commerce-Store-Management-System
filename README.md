@@ -155,10 +155,11 @@ It demonstrates the development of a complete store management workflow, from th
 
 ## 📸 Screenshots
 
-The image above provides a visual preview of the system across desktop, tablet, and mobile interfaces.
+### E-Commerce Store & Admin Dashboard
 
-Additional screenshots of the actual storefront and administration dashboard can be added here.
+![E-Commerce Store and Admin Dashboard](Images/ecommerce-preview.png)
 
+The system is designed with responsive interfaces for desktop, tablet, and mobile devices.
 ---
 
 ## 👩‍💻 Developer
