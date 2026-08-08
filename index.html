@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="متجر إلكتروني عصري">
+  <title>المتجر</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+</head>
+<body>
+  <div id="loading" class="loading"><span class="spinner"></span><p>نجهّز المتجر لكِ...</p></div>
+  <div id="toast" aria-live="polite"></div>
+
+  <div id="publicApp" class="hidden">
+    <div class="announcement" id="announcement"></div>
+    <header class="site-header">
+      <button class="brand" onclick="location.reload()" aria-label="الرئيسية">
+        <span class="brand-mark" id="brandMark"></span>
+        <span><b id="storeName"></b><small id="storeSubtitle"></small></span>
+      </button>
+      <label class="search-wrap">
+        <svg viewBox="0 0 24 24"><path d="m21 21-4.3-4.3m2.3-5.2A7.5 7.5 0 1 1 4 11.5a7.5 7.5 0 0 1 15 0Z"/></svg>
+        <input id="searchInput" placeholder="ابحثي عن منتج أو قسم">
+      </label>
+      <div class="header-actions">
+        <button class="icon-button" onclick="openCart()">السلة <span class="count" id="cartCount">0</span></button>
+      </div>
+    </header>
+
+    <nav id="categoryNav" class="category-nav"></nav>
+
+    <main>
+      <section class="hero hero-images-only">
+        <div class="hero-media" id="heroMedia">
+          <div class="hero-placeholder"><span id="heroInitial"></span><small>صورة الغلاف</small></div>
+        </div>
+      </section>
+
+      <section id="bestSellersSection" class="products-section featured-section hidden">
+        <div class="section-heading">
+          <div><span class="eyebrow">اختيارات العملاء</span><h2>الأكثر مبيعًا</h2></div>
+        </div>
+        <div id="bestSellerGrid" class="product-grid"></div>
+      </section>
+
+      <section id="productsSection" class="products-section">
+        <div class="section-heading">
+          <div><span class="eyebrow">مختارات المتجر</span><h2 id="productsTitle">جميع المنتجات</h2></div>
+        </div>
+        <div id="productGrid" class="product-grid"></div>
+      </section>
+    </main>
+
+    <footer>
+      <div><h2 id="footerName"></h2><p id="footerText"></p></div>
+      <a id="whatsappLink" target="_blank" rel="noopener">تواصلي معنا عبر واتساب</a>
+      <small>© <span id="year"></span> جميع الحقوق محفوظة</small>
+    </footer>
+  </div>
+
+  <div id="setupMessage" class="setup-screen hidden">
+    <div class="setup-card"><span class="brand-mark">م</span><h1>المتجر غير مربوط بعد</h1><p>ضعي رابط ومفتاح Supabase في ملف <code>config.js</code>.</p></div>
+  </div>
+
+  <div id="adminApp" class="admin hidden">
+    <aside class="sidebar">
+      <div class="admin-brand"><span class="brand-mark" id="adminMark"></span><div><b id="adminStoreName"></b><small>لوحة الإدارة</small></div></div>
+      <nav>
+        <button data-page="dashboard" onclick="adminPage('dashboard')">الرئيسية</button>
+        <button data-page="products" onclick="adminPage('products')">المنتجات</button>
+        <button data-page="inventory" onclick="adminPage('inventory')">المخزون السريع</button>
+        <button data-page="categories" onclick="adminPage('categories')">الأقسام</button>
+        <button data-page="orders" onclick="adminPage('orders')">الطلبات <span id="ordersBadge" class="nav-badge hidden">0</span></button>
+        <button data-page="appearance" onclick="adminPage('appearance')">السلايدر واللوجو</button>
+      </nav>
+      <button class="sidebar-secondary" onclick="backToStore()">عرض المتجر</button>
+      <button class="sidebar-secondary" onclick="logout()">تسجيل الخروج</button>
+    </aside>
+
+    <div class="admin-shell">
+      <header class="admin-header"><button class="menu-button" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button><div><b id="adminGreeting"></b><small>إدارة آمنة وخاصة بهذا المتجر فقط</small></div></header>
+      <main class="admin-main">
+        <section id="dashboardPage" class="admin-page">
+          <div class="page-heading"><div><span class="eyebrow">نظرة سريعة</span><h1>لوحة التحكم</h1></div></div>
+          <div class="stats">
+            <article><span>المنتجات</span><strong id="statProducts">0</strong></article>
+            <article><span>الأقسام</span><strong id="statCategories">0</strong></article>
+            <article><span>إجمالي المخزون</span><strong id="statStock">0</strong></article>
+            <article><span>مخزون منخفض</span><strong id="statLow">0</strong></article>
+          </div>
+          <div class="panel welcome-panel"><div><span class="eyebrow">مرحبًا بكِ</span><h2>متجرك جاهز للإدارة</h2><p>أضيفي الأقسام أولًا، ثم المنتجات وصورها. الكميات تظهر هنا فقط ولا تظهر للمشتري.</p></div><button class="primary" onclick="adminPage('products')">إضافة منتج</button></div>
+        </section>
+
+        <section id="productsPage" class="admin-page hidden">
+          <div class="page-heading"><div><span class="eyebrow">المخزون والصور</span><h1>إدارة المنتجات</h1></div></div>
+          <div class="panel"><div class="panel-title"><h2 id="productFormTitle">منتج جديد</h2><button id="cancelProductEdit" class="outline-button hidden" type="button" onclick="cancelEditProduct()">إلغاء التعديل</button></div><form id="productForm" class="form-grid">
+            <input id="editingProductId" type="hidden">
+            <label>اسم المنتج<input id="pName" required></label>
+            <label>القسم<select id="pCategory" required></select></label>
+            <label>السعر الأصلي<input id="pPrice" type="number" min="0" step="0.01" required></label>
+            <label id="regularStockField" class="hidden">الكمية المتوفرة<input id="pStock" type="number" min="0" value="0"></label>
+            <input id="pType" type="hidden" value="regular">
+            <label class="wide">وصف مختصر<input id="pShortDescription" maxlength="120" placeholder="يظهر تحت اسم المنتج"></label>
+            <label class="wide">الوصف الكامل<textarea id="pDescription" rows="4" placeholder="تفاصيل القطعة والخامة وطريقة الاستخدام"></textarea></label>
+            <div class="wide variant-builder">
+              <h3>خيارات المنتج والمخزون</h3>
+              <p class="muted">أدخلي ألوان المنتج دائمًا، ثم فعّلي المقاس أو النمرة فقط إذا كان المنتج يحتاجها.</p>
+              <input id="pUseColors" type="checkbox" checked class="hidden">
+              <div class="always-color-field"><label>ألوان المنتج<input id="pColors" placeholder="مثال: ذهبي، فضي أو أسود، بيج، بني" required oninput="renderImageColorAssignments()"></label></div>
+              <div class="variant-option-toggles">
+                <label class="option-toggle"><input id="pUseSizes" type="checkbox" onchange="updateVariantBuilder('size')"><span><b>إضافة مقاسات</b><small>مثل S، M، L، XL</small></span></label>
+                <label class="option-toggle"><input id="pUseNumbers" type="checkbox" onchange="updateVariantBuilder('number')"><span><b>إضافة نمر</b><small>مثل 36، 37، 38، 39</small></span></label>
+              </div>
+              <div id="variantBuilder" class="variant-builder-fields">
+                <label id="sizeOptionField" class="hidden">المقاسات<input id="pSizesInput" placeholder="S، M، L، XL"></label>
+                <label id="numberOptionField" class="hidden">النمر<input id="pNumbersInput" placeholder="36، 37، 38، 39"></label>
+              </div>
+              <button id="buildVariantsButton" type="button" class="outline-button" onclick="buildVariantMatrix()">إنشاء جدول الكميات</button>
+              <div id="variantMatrix" class="variant-matrix"></div>
+            </div>
+            <input id="pSizes" type="hidden"><input id="pShoeSizes" type="hidden"><textarea id="pVariants" class="hidden"></textarea>
+            <div id="currentProductImages" class="wide edit-images hidden"></div>
+            <label class="wide">صور المنتج<input id="pImage" type="file" accept="image/jpeg,image/png,image/webp" multiple onchange="renderImageColorAssignments()"><small>اختاري عدة صور، ثم حددي اللون الخاص بكل صورة. كل صورة بحد أقصى 5MB</small></label>
+            <div id="imageColorAssignments" class="wide image-color-assignments"></div>
+            <button id="saveProductButton" class="primary wide">حفظ المنتج</button>
+          </form></div>
+          <div class="panel"><div class="panel-title"><h2>المنتجات الحالية</h2><span class="muted">الكميات لا يراها المشتري</span></div><div id="adminProducts" class="admin-list"></div></div>
+        </section>
+
+        <section id="inventoryPage" class="admin-page hidden">
+          <div class="page-heading"><div><span class="eyebrow">تعديل سريع</span><h1>إدارة المخزون</h1></div><button id="saveInventoryButton" class="primary" onclick="saveAllInventory()">حفظ جميع الكميات</button></div>
+          <div class="panel"><p class="muted">عدّلي كمية أي لون أو مقاس مباشرة، ثم احفظي جميع التغييرات مرة واحدة.</p><div id="inventoryTable" class="inventory-table"></div></div>
+        </section>
+
+        <section id="categoriesPage" class="admin-page hidden">
+          <div class="page-heading"><div><span class="eyebrow">تنظيم المتجر</span><h1>إدارة الأقسام</h1></div></div>
+          <div class="panel"><form id="categoryForm" class="inline-form"><input id="categoryName" placeholder="مثال: ملابس" required><button class="primary">إضافة قسم</button></form><p class="muted">حددي خصمًا مختلفًا لكل قسم، وسيُطبّق تلقائيًا على جميع منتجاته الحالية والجديدة.</p><div id="adminCategories" class="category-discount-list"></div></div>
+        </section>
+
+        <section id="ordersPage" class="admin-page hidden">
+          <div class="page-heading"><div><span class="eyebrow">البيع والتوصيل</span><h1>الطلبات</h1></div><button class="outline-button" onclick="loadOrders()">تحديث</button></div>
+          <div class="panel"><div class="orders-toolbar"><input id="orderSearch" placeholder="ابحثي بالاسم أو رقم الهاتف" oninput="renderOrders()"><select id="orderStatusFilter" onchange="renderOrders()"><option value="">كل الحالات</option><option value="new">جديد</option><option value="preparing">قيد التجهيز</option><option value="shipped">تم الشحن</option><option value="completed">مكتمل</option><option value="cancelled">ملغي</option></select></div><div class="panel-title"><h2>الطلبات الواردة</h2><span class="muted">تظهر الطلبات الجديدة أولًا</span></div><div id="adminOrders" class="orders-list"></div></div>
+        </section>
+
+        <section id="appearancePage" class="admin-page hidden">
+          <div class="page-heading"><div><span class="eyebrow">واجهة المتجر</span><h1>الغلاف واللوجو</h1></div></div>
+          <div class="panel"><div class="panel-title"><div><h2>صور السلايدر الرئيسية</h2><p class="muted">اختاري صورة واحدة أو عدة صور أفقية. ستتغير تلقائيًا في واجهة المتجر.</p></div></div><form id="slideForm"><label class="upload-box">اختيار صور السلايدر<input id="slideImages" type="file" accept="image/jpeg,image/png,image/webp" multiple required></label><button class="primary">إضافة الصور إلى السلايدر</button></form><div id="slidesAdminList" class="slides-admin-list"></div></div>
+          <div class="panel appearance-grid logo-panel"><div><h2>لوجو المتجر</h2><p class="muted">ارفعي لوجو مربعًا أو دائريًا بخلفية واضحة. سيظهر مكان حرف اسم المتجر.</p><form id="logoForm"><label class="upload-box">اختيار اللوجو<input id="logoImage" type="file" accept="image/jpeg,image/png,image/webp" required></label><button class="primary">حفظ اللوجو</button></form></div><div id="logoPreview" class="logo-preview"><span class="brand-mark">ش</span></div></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div id="overlay"></div>
+  <script src="app.js"></script>
+</body>
+</html>
